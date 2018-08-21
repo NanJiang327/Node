@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Comments</title>
+  </head>
+  <body>
+    <h1>Comment</h1>
+    <% comments.forEach((comment) => { %>
+      <div class="">
+        <%= comment.comment %>
+        <span style="color: #ccc"><%= comment.created_at %></span>
+      </div>
+    <% }) %>
+  </body>
+</html>
