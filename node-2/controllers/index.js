@@ -13,14 +13,20 @@ var fn_signin = async(ctx, next) => {
       password = ctx.request.body.password || '';
   console.log(`Signin with name: ${name} , password; ${password}`);
   if(name === 'koa' && password === '12345'){
-    ctx.response.body = `<h1>Welcome, ${name}!</h1>`;
+    ctx.response.redirect('/user='+name);
   } else {
     ctx.response.body = `<h1>Login failed</h1>
     <p><a href="/">Try again</a></p>`;
   }
 };
 
+var fn_redirect = async(ctx, next) => {
+  var name = ctx.params.name;
+  ctx.response.body = `<h1>Welcome, ${name}!</h1>`;
+}
+
 module.exports = {
   'GET /':fn_index,
-  'POST /signin': fn_signin
+  'POST /signin': fn_signin,
+  'GET /user=:name': fn_redirect
 };
