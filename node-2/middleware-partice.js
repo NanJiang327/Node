@@ -28,6 +28,7 @@ const main = (ctx, next) => {
   ctx.response.body = n + 'views';
 }
 
+
 // 把中间件合成
 const middlewares = compose([one, two, three, main]);
 
