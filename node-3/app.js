@@ -1,37 +1,60 @@
 const http = require('http');
-const url = 'http://www.imooc.com/learn/348';
+const baseUrl = `http://www.imooc.com/learn/`;
 const cheerio = require('cheerio');
+const videoIds = [348,259, 197, 134, 75];
 
-http.get(url, function(res){
-  var html = '';
+function getPageAsync(url){
+  return new Promise(function(resolve, reject){
+    console.log(' 正在爬取' + url );
+    http.get(url, function(res){
+      var html = '';
 
-  res.on('data', function(data) {
-    html += data;
-  });
+      res.on('data', function(data) {
+        html += data;
+      });
 
-  res.on('end', function(){
-    var courseData = filterChapters(html);
-    print(courseData);
-  });
-}).on('error', function(){
-  console.log('Error !');
-});
+      res.on('end', function(){
+        resolve(html);
 
-function print(courseData) {
-  courseData.forEach(function(item){
-    var chapterTitle = item.chapterTitle;
-    console.log(chapterTitle.trim() + ' ');
+      });
+    }).on('error', function(){
+        reject(e);
+        console.log('Error !');
+    });
 
-    item.videos.forEach(function(video){
-      console.log('  -' + video.id + '- ' + video.title.replace(/\s+/g, '') + '\n');
-    })
   })
 }
+
+var fetchCourseArray = [];
+
+videoIds.forEach(function(id){
+  fetchCourseArray.push(getPageAsync(baseUrl + id));
+})
+
+Promise.all(fetchCourseArray).then(function(pages){
+  var coursesData = [];
+
+  pages.forEach(function(html){
+    var courses = filterChapters(html);
+
+    coursesData.push(courses);
+  })
+
+  coursesData.sort(function(a,b){
+    return a.number < b.number;
+  })
+
+  print(coursesData);
+});
 
 function filterChapters(html){
   var $ = cheerio.load(html);
   var chapters = $('.chapter');
-  var courseData = [];
+  var title = $('.hd h2').text();
+  var courseData = {
+    title: title,
+    videos: []
+  };
 
   chapters.each(function(item) {
     var chapter = $(this)
@@ -52,9 +75,25 @@ function filterChapters(html){
         title: videoTitle,
         id: id
       });
-      courseData.push(chapterData);
+      courseData.videos.push(chapterData);
     })
   });
 
   return courseData;
+}
+
+function print(coursesData) {
+  
+  coursesData.forEach(function(courseData){
+    console.log('课程: ' + courseData.tittle + '\n');
+
+    courseData.videos.forEach(function(item){
+      var chapterTitle = item.chapterTitle;
+      console.log(chapterTitle.trim() + ' ');
+
+      item.videos.forEach(function(video){
+        console.log('  -' + video.id + '- ' + video.title.replace(/\s+/g, '') + '\n');
+      })
+    })
+  })
 }
