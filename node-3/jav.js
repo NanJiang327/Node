@@ -82,6 +82,14 @@ function print(videoData) {
     <head>
       <meta charset="utf-8">
       <style>
+        body {
+          width: 150px;
+          margin: 0 auto;
+        }
+
+        h1 {
+          text-align: center;
+        }
         table.imagetable {
              font-family: verdana,arial,sans-serif;
              font-size:11px;
@@ -108,6 +116,7 @@ function print(videoData) {
       <title> ${star} </title>
     </head>
     <body>
+    <h1>${star}老师</h1>
     <table class="imagetable">
        <tr>
            <th>车牌</th>
