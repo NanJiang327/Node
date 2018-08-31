@@ -33,7 +33,7 @@ function getPageAsync(url){
 var fetchCourseArray = [getPageAsync(`https://www5.javmost.com/star/${star}/`)];
 
 for(var i = 2; i <= page; i++){
-    fetchCourseArray.push(getPageAsync(baseUrl+'/page/'+i+'/'));
+    fetchCourseArray.push(getPageAsync(baseUrl+'page/'+i+'/'));
 }
 
 
@@ -53,10 +53,16 @@ function filterChapters(html){
     var chapter = $(this);
     var title = chapter.find('h4').text();
     var actors = chapter.find('.btn.btn-danger.btn-xs.m-r-5.m-t-2').length;
+    //  https://pics.dmm.co.jp/digital/video/2wpvr00064/2wpvr00064pl.jpg
+    var src = chapter.find('.card-img-top').attr('src');
+    if(src.indexOf('http') === -1) {
+      src = 'https:'+src;
+    }
     if (actors == 1) {
       videosData.push({
         title: title,
-        downloadAddress: 'https://btso.pw/search/'+title
+        downloadAddress: 'https://btso.pw/search/'+title,
+        src: src
       })
     }
  });
@@ -71,7 +77,7 @@ function print(videoData) {
     // console.log('下载地址: ' +item.downloadAddress);
     // console.log('--------------');
     html += `<tr>
-                <td> ${item.title} </td><td><a href=${item.downloadAddress} target=_blank>点我下载</a></td>
+                <td><img src=${item.src}></td><td> ${item.title} </td><td><a href=${item.downloadAddress} target=_blank>点我下载</a></td>
             </tr>
           `;
   });
@@ -83,8 +89,13 @@ function print(videoData) {
       <meta charset="utf-8">
       <style>
         body {
-          width: 150px;
+          width: 600px;
           margin: 0 auto;
+        }
+
+        img {
+          width: 400px;
+          height: 400px
         }
 
         h1 {
@@ -116,9 +127,10 @@ function print(videoData) {
       <title> ${star} </title>
     </head>
     <body>
-    <h1>${star}老师</h1>
+    <h1>${star}</h1>
     <table class="imagetable">
        <tr>
+           <th></th>
            <th>车牌</th>
            <th>下载地址</th>
        </tr>

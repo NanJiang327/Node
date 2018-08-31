@@ -4,7 +4,7 @@ var guestNumber = 1;
 var nickNames = {};
 var namesUsed = [];
 var currentRoom = {};
-
+  
 //启动 socketio 服务器
 exports.listen = function (server) {
     io = socketio.listen(server);       //  启动 socketio服务器,允许它搭载到已有的 http 服务器

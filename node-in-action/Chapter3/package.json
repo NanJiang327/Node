@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "formidable": "^1.2.1",
     "mime": "^1.2.7",
     "socket.io": "^0.9.6"
   }

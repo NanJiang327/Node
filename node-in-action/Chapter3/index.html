@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo List</title>
+  </head>
+  <body>
+    <h1>文件进度</h1>
+    <p id="progress"></p>
+    <form id="submit-form" action="/" method="post" enctype="multipart/form-data">
+      <p><input type="file" name="file" value=""></p>
+      <p><input type="submit" value="Add Item"></p>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+    <script src="percent.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>
