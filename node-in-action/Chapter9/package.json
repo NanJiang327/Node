@@ -1,0 +1,16 @@
+{
+  "name": "Chapter9",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "script": {
+    "start": "./node_modules/.bin/nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "0.7.3",
+    "bcrypt-nodejs": "0.0.3",
+    "ejs": "*",
+    "express": "3.x",
+    "redis": "0.7.2"
+  }
+}
