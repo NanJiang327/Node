@@ -31,7 +31,33 @@ app.use(session({
 }));
 
 // flash中间件, 用来显示通知
-app.use(flash);
+app.use(flash());
+
+
+// 设置模板的全局变量
+app.locals.blog = {
+  title: pkg.name,
+  description: pkg.description
+}
+
+// 添加模板必须的三个变量
+app.use(function(req, res, next){
+  res.locals.user = req.session.user
+  res.locals.success = req.flash('success').toString()
+  res.locals.error = req.flash('error').toString()
+  next()
+})
+
+app.use(require('express-formidable')({
+  uploadDir: path.join(__dirname, 'public/img'), // 上传文件目录
+  keepExtensions: true // 保留后缀
+}));
+
+app.use(function(err, req, res,next){
+  console.error(err);
+  req.flash('error', err.message);
+  res.redirect('/posts');
+})
 
 // 路由
 routes(app);
