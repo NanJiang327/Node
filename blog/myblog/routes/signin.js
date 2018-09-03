@@ -17,35 +17,35 @@ router.post('/', checkNotLogin, function(req, res, next) {
 
     // 效验参数
     try {
-      if(!name.length){
-        throw new Error('Please enter username');
-      }
-      if(!password.length){
-        throw new Error('Please enter password');
-      }
-    }catch (e){
-      req.flash('error', e.message);
-      return res.redirect('back');
+        if (!name.length) {
+            throw new Error('Please enter username');
+        }
+        if (!password.length) {
+            throw new Error('Please enter password');
+        }
+    } catch (e) {
+        req.flash('error', e.message);
+        return res.redirect('back');
     }
 
     UserModel.getUserByName(name)
-      .then(function(user){
-        if(!user) {
-          req.flash('error', 'User doesn\'t existed');
-          return res.redirect('back');
-        }
+        .then(function(user) {
+            if (!user) {
+                req.flash('error', 'User doesn\'t existed');
+                return res.redirect('back');
+            }
 
-        // check password match
-        if(sha1(password) !== user.password) {
-          req.flash('error', 'Check your password or username');
-          return res.redirect('back');
-        }
-        req.flash('success', 'Logged In');
-        delete user.password;
-        req.session.user = user;
-        // 跳转到主页
-        res.redirect('/posts');
-      }).catch(next);
+            // check password match
+            if (sha1(password) !== user.password) {
+                req.flash('error', 'Check your password or username');
+                return res.redirect('back');
+            }
+            req.flash('success', 'Logged In');
+            delete user.password;
+            req.session.user = user;
+            // 跳转到主页
+            res.redirect('/posts');
+        }).catch(next);
 });
 
 module.exports = router;
