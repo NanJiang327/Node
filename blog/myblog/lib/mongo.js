@@ -19,6 +19,14 @@ exports.Post = mongolass.model('Post', {
     pv: {type: 'number', default: 0},
 });
 
+exports.Comment = mongolass.model('Comment', {
+    author: {type: Mongolass.Types.ObjectId, required: true},
+    content: {type: 'string', required: true},
+    postId: {type: Mongolass.Types.ObjectId, required: true},
+})
+
+exports.Comment.index({postId: 1, _id: -1}).exec() // 通过文章id获取该文章下所有留言, 按留言创建时间升序
+
 exports.Post.index({author: 1, _id: -1}).exec()// 按创建时间降序查看用户的文章列表
 
 exports.User.index({name: 1}, {unique: true}).exec() // 根据用户名找到用户, 用户名全局唯一

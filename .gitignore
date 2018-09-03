@@ -48,6 +48,8 @@ lib-cov
 *lock.json
 pids
 logs
+config/*
+!config/default.*
 #results
 npm-debug.log
 node_modules/

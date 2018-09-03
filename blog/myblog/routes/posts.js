@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const PostModel = require('../models/posts')
+const PostModel = require('../models/posts');
+const CommentModel = require('../models/comments')
 
 const checkLogin = require('../middlewares/check').checkLogin;
 
@@ -61,15 +62,18 @@ router.get('/:postId', function(req, res, next) {
 
     Promise.all([
         PostModel.getPostById(postId), // 获取文章信息
+        CommentModel.getComments(postId), // 获取该文章所有留言
         PostModel.incPv(postId), // pv 加 1
     ]).then(function(result) {
         const post = result[0];
+        const comments = result[1];
         if (!post) {
             throw new Error('Article doesn\'t exist.');
         }
 
         res.render('post', {
             post: post,
+            comments: comments,
         })
     })
         .catch(next);
