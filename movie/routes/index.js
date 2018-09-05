@@ -7,6 +7,7 @@ module.exports = function(app) {
     app.use('/admin/list', require('./list'));
     app.use('/movie', require('./detail'));
     app.use('/main', require('./main'));
+    app.use('/user', require('./user'))
 
     app.use(function(req, res) {
         if (!res.headersSent) {
