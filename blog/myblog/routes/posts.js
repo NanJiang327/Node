@@ -44,7 +44,7 @@ router.post('/create', checkLogin, function(req, res, next) {
 
     PostModel.create(post)
         .then(function(result) {
-        // 此post事插入mongodb后的值, 包含_id
+        // 此post是插入mongodb后的值, 包含_id
             post = result.ops[0];
             req.flash('success', 'Posted');
             res.redirect(`/posts/${post._id}`);
