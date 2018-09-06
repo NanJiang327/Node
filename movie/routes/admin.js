@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Movie = require('../models/movies');
+const User = require('../models/users');
 const _ = require('underscore');
 
 // GET /admin/movie
@@ -31,6 +32,20 @@ router.get('/update/:id', function(req, res) {
             })
         })
     }
+})
+
+// GET /admin/userList
+router.get('/userlist', function(req, res) {
+    User.fetch(function(err, users) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.render('userlist', {
+            title: 'User list',
+            users: users,
+        })
+    })
 })
 
 // POST /admin/movie/new
