@@ -4,8 +4,8 @@ const Movie = require('../models/movies');
 const User = require('../models/users');
 const _ = require('underscore');
 
-// GET /admin/movie
-router.get('/movie', function(req, res) {
+// GET /admin/movie/new
+router.get('/movie/new', function(req, res) {
     res.render('admin', {
         title: 'admin',
         movie: {
@@ -20,8 +20,8 @@ router.get('/movie', function(req, res) {
         }});
 });
 
-// GET /admin/update/:id
-router.get('/update/:id', function(req, res) {
+// GET /admin/movie/update/:id
+router.get('/movie/update/:id', function(req, res) {
     const id = req.params.id;
 
     if (id) {
@@ -34,8 +34,8 @@ router.get('/update/:id', function(req, res) {
     }
 })
 
-// GET /admin/userList
-router.get('/userlist', function(req, res) {
+// GET /admin/user/list
+router.get('/user/list', function(req, res) {
     User.fetch(function(err, users) {
         if (err) {
             console.log(err);
@@ -90,6 +90,34 @@ router.post('/movie/new', function(req, res) {
             }
 
             res.redirect('/movie/' + movie._id);
+        })
+    }
+});
+
+
+// GET admin/movie/list
+router.get('/movie/list', function(req, res) {
+    Movie.fetch(function(err, movies) {
+        if (err) {
+            console.log(err);
+        }
+        res.render('list', {
+            title: 'List',
+            movies: movies,
+        });
+    })
+});
+
+// DELETE admin/movie/list
+router.delete('/movie/list', function(req, res) {
+    const id = req.query.id;
+    if (id) {
+        Movie.deleteOne({_id: id}, function(err, movie) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json({success: 1});
+            }
         })
     }
 })

@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        unique: true,
-    },
-    password: String,
+const CommentSchema = new mongoose.Schema({
+    director: String,
+    title: String,
+    language: String,
+    country: String,
+    summary: String,
+    flash: String,
+    poster: String,
+    year: Number,
     meta: {
         createdAt: {
             type: Date,
@@ -18,27 +21,18 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-UserSchema.methods = {
-    comparePassword: function(_password, cb) {
-        if (this.password === _password) {
-            return cb(null, true);
-        } else {
-            return cb(null, false);
-        }
-    },
-}
 
-
-UserSchema.pre('save', function(next) {
+CommentSchema.pre('save', function(next) {
     if (this.isNew) {
         this.meta.createdAt = this.meta.updateAt = Date.now()
     } else {
         this.meta.updateAt = Date.now();
     }
+
     next();
 })
 
-UserSchema.statics = {
+CommentSchema.statics = {
     fetch: function(cb) {
         return this
             .find({})
@@ -52,4 +46,4 @@ UserSchema.statics = {
     },
 }
 
-module.exports = UserSchema;
+module.exports = CommentSchema;

@@ -7,15 +7,15 @@ const config = require('config-lite')(__dirname);
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const app = express();
-const routes = require('./routes');
+const routes = require('./app/routes');
 const bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost:27017/nan', {useNewUrlParser: true});
+mongoose.connect(config.mongodb, {useNewUrlParser: true});
 
 app.locals.moment = require('moment');
 
 // 设置模板目录
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 // 设置模板引擎为ejs
 app.set('view engine', 'ejs');
 
@@ -37,9 +37,23 @@ app.use(session({
 
 // flash中间件, 用来显示通知
 // app.use(flash());
+if ('development' === app.get('env')) {
+    app.set('showStackError', true);
+    // app.use(logger(':method :url :status'))
+    app.locals.pretty = true;
+    mongoose.set('debug', true);
+}
 
 // 设置静态文件目录
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+// 添加模板必须的三个变量
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user
+    next()
+})
+
 
 // 路由
 routes(app);
