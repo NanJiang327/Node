@@ -120,6 +120,7 @@ router.delete('/movie/list', function(req, res) {
             }
         })
     }
-})
+});
+
 
 module.exports = router;

@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/users')
+const Comment = require('../models/comment');
 const sha1 = require('sha1');
+const checkLogin = require('../../middleware/check').checkLogin;
+
 
 // GET /signup
 router.get('/signup', function(req, res) {
@@ -83,6 +86,43 @@ router.post('/signin', function(req, res) {
             }
         })
     })
+})
+
+// Comment
+
+// POST /admin/comment
+router.post('/comment', checkLogin, function(req, res) {
+    const _comment = req.body.comment;
+    const movieId = _comment.movie;
+
+    if (_comment.cid) {
+        Comment.findById(_comment.cid, function(err, comment) {
+            const reply = {
+                from: _comment.from,
+                to: _comment.cid,
+                content: _comment.content,
+            }
+
+            comment.reply.push(reply);
+            comment.save(function(err, comment) {
+                if (err) {
+                    console.log(err);
+                }
+
+                res.redirect('/movie/' +movieId);
+            })
+        })
+    } else {
+        const comment = new Comment(_comment);
+
+        comment.save(function(err, movie) {
+            if (err) {
+                console.log(err);
+            }
+
+            res.redirect('/movie/' +movieId);
+        })
+    }
 })
 
 module.exports = router;

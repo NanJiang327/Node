@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 const CommentSchema = new mongoose.Schema({
-    director: String,
-    title: String,
-    language: String,
-    country: String,
-    summary: String,
-    flash: String,
-    poster: String,
-    year: Number,
+    movie: {type: ObjectId, ref: 'Movie'},
+    from: {type: ObjectId, ref: 'User'},
+    reply: [{
+        from: {type: ObjectId, ref: 'User'},
+        to: {type: ObjectId, ref: 'User'},
+        content: String,
+    }],
+    content: String,
     meta: {
         createdAt: {
             type: Date,

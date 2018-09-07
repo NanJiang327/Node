@@ -1,5 +1,3 @@
-const checkLogin = require('../../middleware/check').checkLogin;
-const checkNotLogin = require('../../middleware/check').checkNotLogin;
 const checkAdmin = require('../../middleware/check').checkAdmin;
 
 module.exports = function(app) {
@@ -12,6 +10,7 @@ module.exports = function(app) {
     app.use('/main', require('./main'));
     app.use('/user', require('./user'));
     app.use('/logout', require('./logout'));
+
 
     app.use(function(req, res) {
         if (!res.headersSent) {
