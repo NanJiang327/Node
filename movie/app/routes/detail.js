@@ -6,15 +6,14 @@ const Comment = require('../models/comment');
 
 router.get('/:id', function(req, res) {
     const id = req.params.id;
+    Movie.update({_id: id}, {$inc: {pv: 1}}, function(err) {
+        console.log(err);
+    })
     Movie.findById(id, function(err, movie) {
         Comment.find({movie: id})
             .populate('from', 'name')
             .populate('reply.from reply.to', 'name')
             .exec(function(err, comments) {
-                if (comments) {
-                    console.log('==='+comments[1].reply);
-                }
-
                 res.render('detail', {
                     title: 'Movie Detail',
                     movie: movie,

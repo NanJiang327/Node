@@ -1,24 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Movie = require('../models/movies');
+const Category = require('../models/category')
 const User = require('../models/users');
 const _ = require('underscore');
 
-// GET /admin/movie/new
-router.get('/movie/new', function(req, res) {
-    res.render('admin', {
-        title: 'admin',
-        movie: {
-            title: '',
-            director: '',
-            country: '',
-            year: '',
-            poster: '',
-            flash: '',
-            summary: '',
-            language: '',
-        }});
-});
 
 // GET /admin/movie/update/:id
 router.get('/movie/update/:id', function(req, res) {
@@ -26,27 +12,27 @@ router.get('/movie/update/:id', function(req, res) {
 
     if (id) {
         Movie.findById(id, function(err, movie) {
-            res.render('admin', {
-                title: 'Admin Update',
-                movie: movie,
+            Category.find({}, function(err, category) {
+                res.render('admin', {
+                    title: 'Admin Update',
+                    movie: movie,
+                    category: category,
+                })
             })
         })
     }
 })
 
-// GET /admin/user/list
-router.get('/user/list', function(req, res) {
-    User.fetch(function(err, users) {
-        if (err) {
-            console.log(err);
-        }
-
-        res.render('userlist', {
-            title: 'User list',
-            users: users,
-        })
+// GET /admin/movie/new
+router.get('/movie/new', function(req, res) {
+    Category.find({}, function(err, category) {
+        res.render('admin', {
+            title: 'admin',
+            category: category,
+            movie: {},
+        });
     })
-})
+});
 
 // POST /admin/movie/new
 router.post('/movie/new', function(req, res) {
@@ -54,9 +40,8 @@ router.post('/movie/new', function(req, res) {
     const movieObj = req.body.movie;
     let _movie;
 
-    console.log(id.length);
 
-    if (id.length) {
+    if (id) {
         Movie.findById(id, function(err, movie) {
             if (err) {
                 console.log(err);
@@ -72,28 +57,41 @@ router.post('/movie/new', function(req, res) {
             })
         })
     } else {
-        _movie = new Movie({
-            director: movieObj.director,
-            title: movieObj.title,
-            country: movieObj.country,
-            language: movieObj.language,
-            year: movieObj.year,
-            poster: movieObj.poster,
-            flash: movieObj.flash,
-            summary: movieObj.summary,
-        })
-
+        _movie = new Movie(movieObj)
+        const categoryId = _movie.category;
+        const categoryName = movieObj.categoryName;
 
         _movie.save(function(err, movie) {
             if (err) {
                 console.log(err);
             }
 
-            res.redirect('/movie/' + movie._id);
+            if (categoryId) {
+                Category.findById(categoryId, function(err, category) {
+                    category.movies.push(_movie._id);
+
+                    category.save(function(err, category) {
+                        res.redirect('/movie/' + movie._id);
+                    })
+                })
+            } else if (categoryName) {
+                const category = new Category({
+                    name: categoryName,
+                    movies: [movie._id],
+                })
+
+                category.save(function(err, category) {
+                    _movie.category = category._id;
+                    _movie.save(function(err, movie) {
+                        res.redirect('/movie/' + movie._id);
+                    });
+                })
+            }
         })
     }
 });
 
+// Movie List
 
 // GET admin/movie/list
 router.get('/movie/list', function(req, res) {
@@ -122,5 +120,65 @@ router.delete('/movie/list', function(req, res) {
     }
 });
 
+// User List
+
+// GET /admin/user/list
+router.get('/user/list', function(req, res) {
+    User.fetch(function(err, users) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.render('userlist', {
+            title: 'User list',
+            users: users,
+        })
+    })
+})
+
+
+// Category
+// GET /admin/movie/category
+router.get('/category/new', function(req, res) {
+    res.render('category', {
+        title: 'Category',
+        category: {
+
+        },
+    });
+});
+
+// POST /admin/movie/category
+router.post('/category/new', function(req, res) {
+    const categoryObj = req.body.category;
+    let _category;
+    console.log(_category);
+
+    _category = new Category(categoryObj);
+
+    _category.save(function(err, movie) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.redirect('/admin/category/list');
+    })
+})
+
+// Category list
+
+// GET /admin/categorylist
+router.get('/category/list', function(req, res) {
+    Category.fetch(function(err, cate) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.render('categorylist', {
+            title: 'Category list',
+            category: cate,
+        })
+    })
+})
 
 module.exports = router;

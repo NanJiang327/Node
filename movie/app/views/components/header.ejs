@@ -15,9 +15,21 @@
 <body>
 <div class="container">
   <div class="row" id="header">
-    <div class="page-header">
+    <div class="page-header clearfix">
       <h1><%= title %></h1>
-      <small>Moive</small>
+      <div class="col-md-4">
+        <small>Moive</small>
+      </div>
+      <div class="col-md-8">
+        <form action="/result" method="GET">
+          <div class="input-group col-sm-4 pull-right">
+            <input type="text" name="q" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Search</button>
+            </span>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

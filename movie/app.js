@@ -37,13 +37,6 @@ app.use(session({
 
 // flash中间件, 用来显示通知
 // app.use(flash());
-if ('development' === app.get('env')) {
-    app.set('showStackError', true);
-    // app.use(logger(':method :url :status'))
-    app.locals.pretty = true;
-    mongoose.set('debug', true);
-}
-
 // 设置静态文件目录
 app.use(express.static(path.join(__dirname, 'public')));
 

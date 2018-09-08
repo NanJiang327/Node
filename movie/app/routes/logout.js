@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/', function(req, res) {
     delete req.session.user;
 
-    res.redirect('/main');
+    res.redirect('back');
 })
 
 

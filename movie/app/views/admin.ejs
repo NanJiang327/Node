@@ -1,13 +1,45 @@
 <%- include('components/header.ejs') %>
     <div class="container">
         <div class="row">
-            <form action="/admin/movie/new" method="POST" class="form-horizontal">
+            <form action="/admin/movie/new" method="POST" class="form-horizontal" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">Sync Douban</label>
+
+                  </label>
+                  <div class="col-sm-10">
+                      <input class="form-control" type="text" id="douban" placeholder="Go to https://movie.douban.com/ to get movie id">
+                  </div>
+              </div>
+
+                <% if(movie._id){ %>
                 <input type="hidden" name="movie[_id]" value="<%= movie._id %>">
+                <% } %>
                 <div class="form-group">
                     <label for="inputTitle" class="col-sm-2 control-label">Movie name</label>
                     <div class="col-sm-10">
                          <input type="text" id="inputTitle" name="movie[title]" value="<%= movie.title %>" class="form-control">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCategory" class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-10">
+                         <input type="text" id="inputCategory" name="movie[categoryName]" value="<%= movie.categoryName %>" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Type</label>
+                    <% category.forEach(function(cate){ %>
+                      <label class="radio-inline">
+                          <% if(movie._id) { %>
+                            <% if(cate._id.toString()==movie.category.toString()) { %>
+                              <input type="radio" name="movie[category]" value="<%= cate._id %>" checked="checked">
+                            <% } %>
+                          <% } else { %>
+                            <input type="radio" name="movie[category]" value="<%= cate._id %>"  >
+                          <% } %>
+                          <%= cate.name %>
+                      </label>
+                    <% }) %>
                 </div>
                 <div class="form-group">
                     <label for="inputDirector" class="col-sm-2 control-label">Director</label>
@@ -55,8 +87,9 @@
                     <div class="col-sm-offset-2 col-sm-10">
                     </div>
                     <button class="btn btn-default" type="submit">Add</button>
-                </div>                
+                </div>
             </form>
         </div>
     </div>
+    <script src="/js/admin.js"></script>
 <%- include('components/footer.ejs') %>

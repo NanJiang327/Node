@@ -1,22 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Movie = require('../models/movies')
+const Category = require('../models/category');
 
 // GET /main
 router.get('/', function(req, res) {
-    console.log('user in session:');
-    console.log(req.session.user);
-
-
-    Movie.fetch(function(err, movies) {
-        if (err) {
-            console.log(err);
-        }
-        res.render('index', {
-            title: 'Main',
-            movies: movies,
-        });
-    })
+    Category.find({})
+        .populate({path: 'movies', optiond: {limit: 5}})
+        .exec(function(err, categories) {
+            res.render('index', {
+                title: 'Main',
+                category: categories,
+            });
+        })
 });
+
 
 module.exports = router;

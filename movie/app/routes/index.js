@@ -10,6 +10,7 @@ module.exports = function(app) {
     app.use('/main', require('./main'));
     app.use('/user', require('./user'));
     app.use('/logout', require('./logout'));
+    app.use('/result', require('./search'));
 
 
     app.use(function(req, res) {

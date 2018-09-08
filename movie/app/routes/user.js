@@ -79,7 +79,7 @@ router.post('/signin', function(req, res) {
 
             if (isMatch) {
                 req.session.user = user;
-                return res.redirect('/main');
+                return res.redirect('back');
             } else {
                 console.log('Password is not matched');
                 return res.redirect('/user/signin');
@@ -99,7 +99,7 @@ router.post('/comment', checkLogin, function(req, res) {
         Comment.findById(_comment.cid, function(err, comment) {
             const reply = {
                 from: _comment.from,
-                to: _comment.cid,
+                to: _comment.tid,
                 content: _comment.content,
             }
 

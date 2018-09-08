@@ -2,17 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-const MovieSchema = new Schema({
-    director: String,
-    title: String,
-    category: {type: ObjectId, ref: 'Category'},
-    pv: {type: Number, default: 0},
-    language: String,
-    country: String,
-    summary: String,
-    flash: String,
-    poster: String,
-    year: Number,
+const CategorySchema = new Schema({
+    name: String,
+    movies: [{type: ObjectId, ref: 'Movie'}],
     meta: {
         createdAt: {
             type: Date,
@@ -26,7 +18,7 @@ const MovieSchema = new Schema({
 });
 
 
-MovieSchema.pre('save', function(next) {
+CategorySchema.pre('save', function(next) {
     if (this.isNew) {
         this.meta.createdAt = this.meta.updateAt = Date.now()
     } else {
@@ -36,7 +28,7 @@ MovieSchema.pre('save', function(next) {
     next();
 })
 
-MovieSchema.statics = {
+CategorySchema.statics = {
     fetch: function(cb) {
         return this
             .find({})
@@ -50,4 +42,4 @@ MovieSchema.statics = {
     },
 }
 
-module.exports = MovieSchema;
+module.exports = CategorySchema;

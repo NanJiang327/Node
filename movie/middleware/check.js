@@ -15,7 +15,7 @@ module.exports = {
 
     checkAdmin: function checkAdmin(req, res, next) {
         if (!req.session.user) {
-            return res.redirect('/signin');
+            return res.redirect('/user/signin');
         }
 
         if (req.session.user.role <= 10) {
